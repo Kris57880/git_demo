@@ -1,28 +1,16 @@
 #include<stdio.h>
 #include<stdlib.h>
 int main(){
-    float a,b;
-    char c;
-    printf("What operation would you like to perform ?\n\tA> Addiction\n\tB> Substraction\n\tC> Multiplication\n\tD> Division\n");
-    scanf("%c",&c);
-    printf("Please enter first number: ");
-    scanf("%f",&a);
-    printf("Please enter second number: ");
-    scanf("%f",&b);
-    printf("\n");
-    switch(c){
-        case 'A' : case 'a':
-            printf("%f + %f = %f",a,b,a+b);
-            break;
-        case 'B' : case 'b':
-            printf("%f - %f = %f",a,b,a-b);
-            break;
-        case 'C' : case 'c':
-            printf("%f * %f = %f",a,b,a*b);
-            break;
-        case 'D' : case 'd':
-            printf("%f / %f = %f",a,b,a/b);
-            break;
-    }    
+    int a;
+    printf("請輸入一個整數\n");
+    while(scanf("%d",&a))
+        switch(a%2){
+            case 1:
+                printf("%d是奇數\n",a);
+                break;
+            case 0:
+                printf("%d是偶數\n",a);
+                break;
+        }
     return 0;
 }
