@@ -8,16 +8,20 @@
 #define MAX_VAL 100//max depth of a stack 
 #define NUMBER '0'// stand for a number 
 int sp=0;//stack position 
+int lp=0;//getline position 
 double val[MAX_VAL];
+void getline(char []);
 int getop(char []);
+int getops(char [],char []);
 void push(double);
 double pop(void);
 int main(){
     int type ; 
-    double op2;
+    double op1 ,op2;
+    char line[MAX_OP];
     char s[MAX_OP];
-
-    while ((type = getop(s))!=EOF){
+    getline(line);
+    while ((type = getops(s,line))!=EOF){
         switch(type){
             case NUMBER:
                 push(atof(s));
@@ -35,10 +39,18 @@ int main(){
             case '/':
                 op2=pop();
                 if (op2!=0) push(pop()/op2) ;
-                else printf("Error Devide by zero !\n");
+                else printf("Error, Divide by zero !\n");
+                break;
+            case '%':
+                op2=pop();
+                op1=pop();
+                if (op2!=0) push(op1-op2*(floor(op1/op2)));
+                else puts("Error, Mod by zero !");
                 break;
             case '\n':
                 printf("= %.2f\n",pop()) ;
+                lp=0;
+                getline(line);
                 break;
             default :
                 puts("Error :UNKOWN numerator or operator !");
@@ -59,9 +71,9 @@ double pop(void){
     return -1;
 }
 //get op function 
-int getch(void);
+int  getch(void);
 void ungetch(int);
-int getop(char s[]){
+int  getop(char s[]){
     int i,c;
 
     while((s[0]=c=getch())==' '||c=='\t') ; 
@@ -82,6 +94,27 @@ int getop(char s[]){
     if(c!=EOF&&c!=' '&&c!='\t')  ungetch(c);//read too much char
     return NUMBER;
 }
+int getops(char s[],char line[]){
+    int i,c;
+
+    while((s[0]=c=line[lp++])==' '||c=='\t'); 
+    //s[0] is the char which is neither tab nor space
+    s[1]='\0';//ensure the end of string will be '\0'
+    if(!isdigit(c)&&c!='.'&&c!='-')
+        return c; //operator or \n
+    i=1;
+    if(c=='-')  {
+        while(isdigit(s[i]=c=line[lp++])) i++;
+        if (i==1)   { s[i]='\0';return s[0]; lp--;}
+    } 
+    if(isdigit(c))//collect integer part
+        while(isdigit(s[i++]=c=line[lp++]));
+    if(c=='.')//'.'has already in the string 
+        while(isdigit(s[i++]=c=line[lp++]));
+    s[i]='\0';
+    if(c!=EOF&&c!=' '&&c!='\t')  lp--;//read too much char
+    return NUMBER;
+}
 #define BUF_SIZE 100
 char buff[BUF_SIZE];
 int bufp = 0 ;//pointer
@@ -92,4 +125,12 @@ void ungetch(int c){
     if(bufp==BUF_SIZE)
         puts("Error : Buffer is FULL");
     else buff[bufp++]=c;
+}
+void getline(char s[]){
+    int i=0,c;
+    for(i=0;i!=MAX_OP;i++)
+        s[i]=0;
+    i=0;
+    while ((s[i++]=c=getchar())!=EOF&&c!='\n'&&i!=MAX_OP);
+    s[i]='\n';
 }
