@@ -38,7 +38,7 @@ int main(){
                 else printf("Error Devide by zero !\n");
                 break;
             case '\n':
-                printf("\t= %.2f\n",pop()) ;
+                printf("= %.2f\n",pop()) ;
                 break;
             default :
                 puts("Error :UNKOWN numerator or operator !");
@@ -67,9 +67,13 @@ int getop(char s[]){
     while((s[0]=c=getch())==' '||c=='\t') ; 
     //s[0] is the char which is neither tab nor space
     s[1]='\0';//ensure the end of string will be '\0'
-    if(!isdigit(c)&&c!='.')
+    if(!isdigit(c)&&c!='.'&&c!='-')
         return c; //operator or \n
     i=1;
+    if(c=='-')  {
+        while(isdigit(s[i]=c=getch())) i++;
+        if (i==1)   { s[i]='\0';return s[0]; ungetch(c);}
+    } 
     if(isdigit(c))//collect integer part
         while(isdigit(s[i++]=c=getch()));
     if(c=='.')//'.'has already in the string 
